@@ -1,0 +1,1245 @@
+openapi: 3.0.3
+info:
+  title: Cooking Champs Mobile API
+  version: 1.0.0
+  description: |
+    Swagger documentation for mobile APIs defined in routes/api.php.
+servers:
+  - url: /api
+    description: Relative API base
+
+tags:
+  - name: Auth
+  - name: Public
+  - name: Pages
+  - name: Home
+  - name: Favorites
+  - name: Child
+  - name: Story
+  - name: Recipe
+  - name: Social
+  - name: Notification
+  - name: Subscription
+  - name: Product
+  - name: Cart
+  - name: Order
+  - name: Checkout
+  - name: School
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Sanctum
+  parameters:
+    XClientHeader:
+      in: header
+      name: X-CLIENT
+      required: true
+      schema:
+        type: string
+      example: your-api-client-key
+  schemas:
+    ApiResponse:
+      type: object
+      properties:
+        status:
+          type: boolean
+        status_code:
+          type: integer
+        message:
+          type: string
+        data:
+          nullable: true
+      additionalProperties: true
+    BasicSuccess:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+    PaginationPayload:
+      type: object
+      properties:
+        total_page:
+          type: integer
+        current_page:
+          type: integer
+        items:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+
+paths:
+  /register-parent:
+    post:
+      tags: [Auth]
+      summary: Register parent account
+      parameters:
+        - $ref: '#/components/parameters/XClientHeader'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [first_name, last_name, email, country_code, mobile_number, password, password_confirmation, fcm_token, device_id, device_type]
+              properties:
+                first_name: { type: string }
+                last_name: { type: string }
+                dob: { type: string }
+                email: { type: string, format: email }
+                country_code: { type: string }
+                mobile_number: { type: string }
+                password: { type: string }
+                password_confirmation: { type: string }
+                fcm_token: { type: string }
+                device_id: { type: string }
+                device_type: { type: string, enum: [android, ios] }
+      responses:
+        '200':
+          description: Parent registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /register-kid:
+    post:
+      tags: [Auth]
+      summary: Register kid account
+      parameters:
+        - $ref: '#/components/parameters/XClientHeader'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [parent_id, role, name, year, grade, username, password, fcm_token, device_id, device_type]
+              properties:
+                parent_id: { type: integer }
+                role: { type: string, enum: [kid] }
+                name: { type: string }
+                image: { type: string, format: binary }
+                avatar: { type: string }
+                day: { type: string }
+                month: { type: string }
+                year: { type: integer }
+                grade: { type: string }
+                username: { type: string }
+                password: { type: string }
+                fcm_token: { type: string }
+                device_id: { type: string }
+                device_type: { type: string, enum: [android, ios] }
+      responses:
+        '200':
+          description: Kid registered
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /social-login:
+    post:
+      tags: [Auth]
+      summary: Social login
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [login_type, role, email, fcm_token, device_id, device_type]
+              properties:
+                login_type: { type: string }
+                first_name: { type: string }
+                last_name: { type: string }
+                role: { type: string }
+                email: { type: string, format: email }
+                image: { type: string, format: binary }
+                fcm_token: { type: string }
+                device_id: { type: string }
+                device_type: { type: string, enum: [android, ios] }
+      responses:
+        '200':
+          description: Login success
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /login:
+    post:
+      tags: [Auth]
+      summary: Login parent (email) or kid (username)
+      parameters:
+        - $ref: '#/components/parameters/XClientHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [password, fcm_token, device_id, device_type]
+              properties:
+                email: { type: string, format: email }
+                username: { type: string }
+                password: { type: string }
+                fcm_token: { type: string }
+                device_id: { type: string }
+                device_type: { type: string, enum: [android, ios] }
+      responses:
+        '200':
+          description: Login response with token
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /forgot-password:
+    post:
+      tags: [Auth]
+      summary: Send OTP to registered email
+      parameters:
+        - $ref: '#/components/parameters/XClientHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email: { type: string, format: email }
+      responses:
+        '200':
+          description: OTP sent
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /otp-verify:
+    post:
+      tags: [Auth]
+      summary: Verify OTP
+      parameters:
+        - $ref: '#/components/parameters/XClientHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [otp]
+              properties:
+                otp: { type: string }
+      responses:
+        '200':
+          description: OTP verify response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /reset-password:
+    post:
+      tags: [Auth]
+      summary: Reset password after OTP verification
+      parameters:
+        - $ref: '#/components/parameters/XClientHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [otp, password, password_confirmation]
+              properties:
+                otp: { type: string }
+                password: { type: string }
+                password_confirmation: { type: string }
+      responses:
+        '200':
+          description: Password reset response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /recipe-tools:
+    get:
+      tags: [Public, Recipe]
+      summary: List recipe tools (public header-protected)
+      parameters:
+        - $ref: '#/components/parameters/XClientHeader'
+      responses:
+        '200':
+          description: Recipe tools
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  '/help-&-support':
+    get:
+      tags: [Pages]
+      summary: Help and support page
+      responses:
+        '200':
+          description: Page response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /about-us:
+    get:
+      tags: [Pages]
+      summary: About us page
+      responses:
+        '200':
+          description: Page response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /terms-and-condition:
+    get:
+      tags: [Pages]
+      summary: Terms and conditions page
+      responses:
+        '200':
+          description: Page response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /privacy-policy:
+    get:
+      tags: [Pages]
+      summary: Privacy policy page
+      responses:
+        '200':
+          description: Page response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /send-friend-request:
+    post:
+      tags: [Home, Social]
+      summary: Send or cancel friend request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [sender_id, receiver_id, request_sent_by, request_sent_to]
+              properties:
+                sender_id: { type: string }
+                receiver_id: { type: string }
+                request_sent_by: { type: string, enum: [parent, kid] }
+                request_sent_to: { type: string, enum: [parent, kid] }
+                type: { type: string, enum: [cancel] }
+      responses:
+        '200':
+          description: Friend request response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /send-follow-request:
+    post:
+      tags: [Home, Social]
+      summary: Follow or unfollow user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [sender_id, receiver_id, follow_req_sent_by, follow_req_sent_to]
+              properties:
+                sender_id: { type: string }
+                receiver_id: { type: string }
+                follow_req_sent_by: { type: string, enum: [parent, kid] }
+                follow_req_sent_to: { type: string, enum: [parent, kid] }
+      responses:
+        '200':
+          description: Follow request response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /home:
+    get:
+      tags: [Home]
+      summary: Home dashboard data
+      parameters:
+        - in: query
+          name: see_all
+          schema:
+            type: string
+            enum: [popular_recipe, featured_stories]
+      responses:
+        '200':
+          description: Home data response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /monthly-challenge-detail/{id}:
+    get:
+      tags: [Home]
+      summary: Monthly challenge detail
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Challenge detail response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /logout:
+    post:
+      tags: [Auth]
+      summary: Logout
+      security: [{ BearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [device_id]
+              properties:
+                device_id: { type: string }
+      responses:
+        '200':
+          description: Logout response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /user-detail:
+    get:
+      tags: [Auth]
+      summary: User profile detail
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - in: query
+          name: kid_id
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User detail response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /update-profile:
+    post:
+      tags: [Auth]
+      summary: Update parent or kid profile
+      security: [{ BearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                first_name: { type: string }
+                last_name: { type: string }
+                image: { type: string, format: binary }
+                avatar: { type: string }
+                kid_id: { type: integer }
+                name: { type: string }
+                day: { type: integer }
+                month: { type: string }
+                year: { type: integer }
+                grade: { type: string }
+                password: { type: string }
+                username: { type: string }
+                country_code: { type: string }
+                mobile_number: { type: string }
+      responses:
+        '200':
+          description: Update profile response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /change-password:
+    post:
+      tags: [Auth]
+      summary: Change current user password
+      security: [{ BearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [new_password, new_password_confirmation]
+              properties:
+                new_password: { type: string }
+                new_password_confirmation: { type: string }
+      responses:
+        '200':
+          description: Password change response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /delete-account:
+    post:
+      tags: [Auth]
+      summary: Soft-delete current account
+      security: [{ BearerAuth: [] }]
+      responses:
+        '200':
+          description: Delete account response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /update-role:
+    post:
+      tags: [Auth]
+      summary: Update parent role/sub-role (role column stays parent; individual is stored as sub_role)
+      security: [{ BearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [role]
+              properties:
+                role:
+                  type: string
+                  enum: [parent, individual]
+      responses:
+        '200':
+          description: Role update response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /add_to_favorites:
+    post:
+      tags: [Favorites]
+      summary: Toggle add/remove favorite recipe
+      security: [{ BearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [recipe_id]
+              properties:
+                recipe_id: { type: string }
+      responses:
+        '200':
+          description: Favorite update response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /favorites-listing:
+    get:
+      tags: [Favorites]
+      summary: Paginated favorites listing
+      security: [{ BearerAuth: [] }]
+      responses:
+        '200':
+          description: Favorites list response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /my-child-listing:
+    get:
+      tags: [Child]
+      summary: List kids for logged-in parent
+      security: [{ BearerAuth: [] }]
+      responses:
+        '200':
+          description: Child listing response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /delete-kid:
+    delete:
+      tags: [Child]
+      summary: Delete kid profile
+      security: [{ BearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [kid_id]
+              properties:
+                kid_id: { type: integer }
+      responses:
+        '200':
+          description: Delete kid response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /add-stories:
+    post:
+      tags: [Story]
+      summary: Add story with cover image and gallery images
+      security: [{ BearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [title, description, image, images]
+              properties:
+                title: { type: string }
+                description: { type: string }
+                image: { type: string, format: binary }
+                images:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                video_link: { type: string }
+      responses:
+        '200':
+          description: Add story response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /edit-stories:
+    post:
+      tags: [Story]
+      summary: Edit story
+      security: [{ BearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [story_id]
+              properties:
+                story_id: { type: integer }
+                title: { type: string }
+                description: { type: string }
+                image: { type: string, format: binary }
+                images:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                video_link: { type: string }
+      responses:
+        '200':
+          description: Edit story response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /story-listing:
+    get:
+      tags: [Story]
+      summary: Paginated own stories and best from champs
+      security: [{ BearerAuth: [] }]
+      responses:
+        '200':
+          description: Story list response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /story-detail:
+    get:
+      tags: [Story]
+      summary: Story detail
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - in: query
+          name: story_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Story detail response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /add-recipe:
+    post:
+      tags: [Recipe]
+      summary: Add recipe
+      security: [{ BearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [recipe_name, banner_image, recipe_tools, ingredients, recipe_steps]
+              properties:
+                recipe_name: { type: string }
+                banner_image: { type: string, format: binary }
+                recipe_tools: { type: string, description: Comma-separated recipe tool ids }
+                ingredients: { type: string, description: Comma-separated ingredients }
+                recipe_steps: { type: string, description: Comma-separated steps }
+                video_link: { type: string }
+      responses:
+        '200':
+          description: Add recipe response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /edit-recipe:
+    post:
+      tags: [Recipe]
+      summary: Edit recipe
+      security: [{ BearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [recipe_id]
+              properties:
+                recipe_id: { type: integer }
+                recipe_name: { type: string }
+                banner_image: { type: string, format: binary }
+                recipe_tools: { type: string }
+                ingredients: { type: string }
+                recipe_steps: { type: string }
+                video_link: { type: string }
+      responses:
+        '200':
+          description: Edit recipe response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /recipe-listing:
+    get:
+      tags: [Recipe]
+      summary: Paginated recipe listing
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - in: query
+          name: type
+          schema:
+            type: string
+            enum: [all]
+      responses:
+        '200':
+          description: Recipe list response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /recipe-detail:
+    get:
+      tags: [Recipe]
+      summary: Recipe detail
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - in: query
+          name: recipe_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Recipe detail response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /like-recipe:
+    post:
+      tags: [Recipe]
+      summary: Like/react to recipe
+      security: [{ BearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [recipe_id, type]
+              properties:
+                recipe_id: { type: integer }
+                type: { type: string }
+                status: { type: string }
+      responses:
+        '200':
+          description: Reaction response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /friend-request:
+    get:
+      tags: [Social]
+      summary: Friend request listing/filter
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - in: query
+          name: type
+          schema:
+            type: string
+            enum: [all, pending, accepted]
+      responses:
+        '200':
+          description: Friend request list
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /accept-friend-request:
+    post:
+      tags: [Social]
+      summary: Accept or decline friend request
+      security: [{ BearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [friend_request_id, accept]
+              properties:
+                friend_request_id: { type: integer }
+                accept: { type: string, enum: [yes, no] }
+      responses:
+        '200':
+          description: Accept/decline response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /pending-friend-request-count:
+    get:
+      tags: [Social]
+      summary: Pending friend request count
+      security: [{ BearerAuth: [] }]
+      responses:
+        '200':
+          description: Count response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /follow-request-list:
+    get:
+      tags: [Social]
+      summary: Followers and following listing
+      security: [{ BearerAuth: [] }]
+      responses:
+        '200':
+          description: Follow list response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /share-stories:
+    post:
+      tags: [Story, Social]
+      summary: Share story with friends
+      security: [{ BearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [story_id, friends_id]
+              properties:
+                story_id: { type: integer }
+                friends_id: { type: string, description: Comma-separated friend request ids }
+      responses:
+        '200':
+          description: Share response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /notification-listing:
+    get:
+      tags: [Notification]
+      summary: Paginated notifications
+      security: [{ BearerAuth: [] }]
+      responses:
+        '200':
+          description: Notifications response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /delete-notification:
+    delete:
+      tags: [Notification]
+      summary: Delete notification
+      security: [{ BearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [notification_id]
+              properties:
+                notification_id: { type: integer }
+      responses:
+        '200':
+          description: Delete response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /subscription-list:
+    get:
+      tags: [Subscription]
+      summary: List subscriptions with purchase status
+      security: [{ BearerAuth: [] }]
+      responses:
+        '200':
+          description: Subscription list response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /shops:
+    post:
+      tags: [Product]
+      summary: Product listing/shop dashboard
+      security: [{ BearerAuth: [] }]
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum: [see_all_categories, see_all_products, see_all_wishlist_products]
+                cat_id: { type: string }
+                search: { type: string }
+      responses:
+        '200':
+          description: Shops response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /product-detail:
+    get:
+      tags: [Product]
+      summary: Product detail
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - in: query
+          name: product_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Product detail response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /product-categories:
+    get:
+      tags: [Product]
+      summary: Product categories list
+      security: [{ BearerAuth: [] }]
+      responses:
+        '200':
+          description: Category list response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /add-to-wishlist:
+    post:
+      tags: [Product]
+      summary: Toggle wishlist item
+      security: [{ BearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [product_id]
+              properties:
+                product_id: { type: integer }
+      responses:
+        '200':
+          description: Wishlist toggle response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /get-wishlist-data:
+    get:
+      tags: [Product]
+      summary: Paginated wishlist items
+      security: [{ BearerAuth: [] }]
+      responses:
+        '200':
+          description: Wishlist response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /add-address:
+    post:
+      tags: [Product]
+      summary: Add address
+      security: [{ BearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, address, address_type]
+              properties:
+                name: { type: string }
+                address: { type: string }
+                address_type: { type: string }
+      responses:
+        '200':
+          description: Add address response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /edit-address:
+    post:
+      tags: [Product]
+      summary: Edit address
+      security: [{ BearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [address_id]
+              properties:
+                address_id: { type: integer }
+                name: { type: string }
+                address: { type: string }
+                address_type: { type: string }
+      responses:
+        '200':
+          description: Edit address response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /delete-address:
+    post:
+      tags: [Product]
+      summary: Delete address
+      security: [{ BearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [address_id]
+              properties:
+                address_id: { type: integer }
+      responses:
+        '200':
+          description: Delete address response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /address-list:
+    get:
+      tags: [Product]
+      summary: Address list
+      security: [{ BearerAuth: [] }]
+      responses:
+        '200':
+          description: Address list response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /add-to-cart:
+    post:
+      tags: [Cart]
+      summary: Add item to cart
+      security: [{ BearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [product_id]
+              properties:
+                product_id: { type: integer }
+      responses:
+        '200':
+          description: Add cart response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /remove-cart:
+    post:
+      tags: [Cart]
+      summary: Remove item from cart by product id
+      security: [{ BearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [product_id]
+              properties:
+                product_id: { type: integer }
+      responses:
+        '200':
+          description: Remove cart response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /cart-list:
+    get:
+      tags: [Cart]
+      summary: Cart summary and totals
+      security: [{ BearerAuth: [] }]
+      responses:
+        '200':
+          description: Cart list response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /update-quantity:
+    post:
+      tags: [Cart]
+      summary: Increment/decrement cart quantity
+      security: [{ BearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [cart_id, product_id, action]
+              properties:
+                cart_id: { type: integer }
+                product_id: { type: integer }
+                action: { type: string, enum: [increment, decrement] }
+      responses:
+        '200':
+          description: Quantity update response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /my-orders:
+    get:
+      tags: [Order]
+      summary: My orders list
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - in: query
+          name: type
+          schema:
+            type: string
+            enum: [orders, delivered]
+      responses:
+        '200':
+          description: Order list response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /order-details:
+    post:
+      tags: [Order]
+      summary: Order detail
+      security: [{ BearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [order_id]
+              properties:
+                order_id: { type: integer }
+      responses:
+        '200':
+          description: Order detail response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /checkout/subscription-url:
+    get:
+      tags: [Checkout]
+      summary: Generate signed checkout URL for subscription
+      security: [{ BearerAuth: [] }]
+      responses:
+        '200':
+          description: Checkout URL response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /checkout/product-order-url:
+    get:
+      tags: [Checkout]
+      summary: Generate signed checkout URL for product order
+      security: [{ BearerAuth: [] }]
+      responses:
+        '200':
+          description: Checkout URL response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }
+
+  /get-school:
+    get:
+      tags: [School]
+      summary: List schools with active videos
+      security: [{ BearerAuth: [] }]
+      responses:
+        '200':
+          description: School listing response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiResponse' }

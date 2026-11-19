@@ -1,0 +1,489 @@
+
+
+/* .form-control{
+	font-weight: 500;
+    color: #222;
+} */
+
+h6.forgot_sec{
+	margin-bottom: 0;
+    text-align: center;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+h6.forgot_sec a{
+	text-decoration: none;
+	color: #333;
+}
+
+.col-form-alert-label{
+    color: #ff0000;
+}
+
+.has-danger .form-control {
+    border-color: #ff0000
+}
+
+.has-danger .col-form-label {
+    color: #e74c3c;
+
+}
+
+/*{
+	background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}*/
+
+.content-header h1 {
+    font-size: 26px;
+    margin: 0;
+    font-weight: 700;
+}
+
+.table-bordered thead th{
+	background: #F8F9FB;
+	color: #6B7280;
+}
+
+.table-bordered td a{
+	margin: 0px 5px;
+}
+
+.nofloat{
+	display: flex;
+    align-items: center;
+    justify-content: space-between;
+    float: none;
+}
+
+table.dataTable td{
+    vertical-align: middle;
+}
+
+.card-title{
+    font-weight: 600;
+}
+
+.table td, .table th{
+    vertical-align: middle;
+}
+
+.profile_pic {
+    width: 100%;
+    background: none;
+    width: 220px;
+    height: 220px;
+    display: block;
+    margin: auto;
+    position: relative;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.profile_pic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 5px solid #007bff;
+    padding: 3px;
+}
+
+/* .form-control {
+    color: #222;
+    height: auto;
+    padding: 10px 15px;
+    font-weight: 500;
+    font-size: 16px;
+} */
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.bg_transparent{
+    background-color: transparent;
+}
+
+#imgInp {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background: #000;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.card-title{
+    float: none;
+}
+
+.card-header i.fa-pencil{
+    margin-right: 10px;
+}
+
+a{
+    text-decoration: none !important;
+}
+
+div.dataTables_wrapper div.dataTables_filter label{
+    text-align: right;
+}
+
+td select{
+    max-width: 150px;
+    display: block;
+    margin: auto;
+}
+
+.sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active, .sidebar-light-primary .nav-sidebar>.nav-item>.nav-link.active{
+     background-color: #49335d;
+     color: #fff !important;
+}
+.sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link:hover, .sidebar-light-primary .nav-sidebar>.nav-item>.nav-link:hover{
+     background-color: #49335d ;
+     color: #fff !important;
+}
+[class*=sidebar-dark-] .sidebar a {
+    color: #000 !important;
+}
+[class*=sidebar-dark-] {
+    background-color: #fff !important;
+    color: #fff !important;
+
+}
+.login-page, .register-page {
+    background-color: #E2EFF8;
+}
+.login-box, .register-box {
+    width: 1050px;
+}
+.login-box, .register-box {
+    width: 1050px;
+    background: #fff;
+    height: 610px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.login_img {
+    width: 100%;
+    height: 610px;
+    object-fit: cover;
+}
+.login-box .card, .register-box .card {
+    margin-bottom: 0; 
+    border-top: none;
+    box-shadow: none;
+}
+.login-box .card-header.text-center {
+    border-bottom: 0px;
+    padding: 0;
+}
+ .btn-primary  {
+    background: #49335d !important;
+    border: #49335d !important;
+    padding: 8px;
+    font-size: 17px;
+    font-weight: 600;
+}
+.login-box .input-group-text {
+    background: #49335d;
+    color: #fff;
+    border: none;
+}
+.login-box input.form-control {
+    border: 1px solid #49335d;
+    height: 45px;
+    
+}
+.login-box input.form-control::placeholder{
+    color: #49335d;
+}
+.login-box [class*=icheck-]>input:first-child+input[type=hidden]+label::before, [class*=icheck-]>input:first-child+label::before { 
+    border: 1px solid #49335d !important; 
+}
+.icheck-primary>input:first-child:checked+input[type=hidden]+label::before, .icheck-primary>input:first-child:checked+label::before {
+    background-color: #49335d; 
+}
+.login-box label {
+    color: #49335d;
+}
+.preloader { 
+    background: #48335C;
+}
+img.animation__shake {
+    width: 200px;
+    object-fit: cover;
+}
+.brand-link .brand-image { 
+    margin: auto;
+    display: block;
+    text-align: center;
+    object-fit: contain; 
+}
+a.brand-link {
+    display: flex;
+}
+[class*=sidebar-dark] .brand-link {
+    border-bottom: 1px solid #dee2e6;
+}
+
+.table-bordered thead th {
+    background: #49335d;
+    color: #fff;
+}
+i.fa-solid.fa-eye, i.fa-solid.fa-pencil {
+    color: rgb(73, 51, 93);
+}
+i.fa-solid.fa-trash {
+    color: #f00;
+}
+.page-item.active .page-link { 
+    background-color: #49335d;
+    border-color: #49335d;
+}
+.page-link { 
+    color: #49335d;  
+}
+
+
+
+
+
+
+
+/* -------------------------------------------------------------------------
+   Admin detail / show pages (recipes, stories, categories, orders, etc.)
+   ------------------------------------------------------------------------- */
+.admin-detail-page .nav-tabs .nav-link {
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem 0.25rem 0 0;
+    margin-right: 0.35rem;
+    color: #333;
+    background: #fff;
+}
+
+.admin-detail-page .nav-tabs .nav-link:hover {
+    border-color: #70bbe8;
+    color: #70bbe8;
+}
+
+.admin-detail-page .nav-tabs .nav-link.active {
+    background: #70bbe8 !important;
+    border-color: #70bbe8 !important;
+    color: #fff !important;
+}
+
+.admin-detail-page .detail-avatar {
+    max-width: 200px;
+    width: 100%;
+    border-radius: 0.5rem;
+    border: 3px solid #70bbe8;
+    object-fit: cover;
+}
+
+.admin-detail-page .dl-detail dt {
+    font-weight: 600;
+    color: #6c757d;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.admin-detail-page .dl-detail dd {
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+}
+
+.admin-detail-page .story-gallery {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.admin-detail-page .story-gallery li {
+    width: 100px;
+    height: 100px;
+    border-radius: 0.35rem;
+    overflow: hidden;
+    border: 1px solid #dee2e6;
+}
+
+.admin-detail-page .story-gallery li img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* -------------------------------------------------------------------------
+   Mobile & tablet responsive (AdminLTE + DataTables)
+   ------------------------------------------------------------------------- */
+
+@media (max-width: 767.98px) {
+    .content-wrapper > .content {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+
+    .content-header h1 {
+        font-size: 1.35rem;
+        line-height: 1.3;
+    }
+
+    .content-header .breadcrumb {
+        display: none;
+    }
+
+    label {
+        font-size: 15px;
+    }
+
+    .card-body {
+        padding: 0.75rem;
+    }
+
+    .card-title.nofloat {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 0.75rem;
+    }
+
+    .card-title.nofloat .btn {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .table-bordered td a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 2.75rem;
+        min-height: 2.75rem;
+        margin: 2px;
+    }
+
+    td select.statusChange,
+    td select.storystatusChange {
+        max-width: 100%;
+    }
+
+    div.dataTables_wrapper div.dataTables_length,
+    div.dataTables_wrapper div.dataTables_filter {
+        text-align: left !important;
+        float: none !important;
+        margin-bottom: 0.5rem;
+    }
+
+    div.dataTables_wrapper div.dataTables_filter label {
+        text-align: left !important;
+        float: none !important;
+        width: 100%;
+        display: block;
+    }
+
+    div.dataTables_wrapper div.dataTables_filter input {
+        width: 100% !important;
+        margin-left: 0 !important;
+        display: block;
+    }
+
+    div.dataTables_wrapper div.dataTables_paginate ul.pagination {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .dataTables_wrapper .row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+/* Horizontal scroll for wide tables (fallback next to Responsive child-rows) */
+.card-body .dataTables_wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.profile_pic {
+    max-width: 100%;
+}
+
+@media (max-width: 575.98px) {
+    .profile_pic {
+        width: min(220px, 100%);
+        height: auto;
+        aspect-ratio: 1;
+    }
+
+    .login-box,
+    .register-box {
+        width: 100% !important;
+        max-width: 100%;
+        height: auto !important;
+        min-height: auto;
+        flex-direction: column;
+    }
+
+    .login_img {
+        height: 200px;
+    }
+
+    .preloader img.animation__shake {
+        width: min(200px, 70vw);
+    }
+}
+
+@media screen and (min-width: 300px) and (max-width: 767px) {
+    #users_wrapper .col-sm-12,
+    #broker_wrapper .col-sm-12,
+    #other_wrapper .col-sm-12,
+    #surveyor_wrapper .col-sm-12,
+    #surveys_wrapper .col-sm-12,
+    #example2_wrapper .col-sm-12,
+    #categories_wrapper .col-sm-12 {
+        overflow: auto;
+    }
+
+    .user-tabs li {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .user-tabs li a {
+        text-align: center;
+    }
+
+    #users_filter {
+        text-align: left;
+        float: left;
+    }
+}
+
+
+
+
+
+
+
